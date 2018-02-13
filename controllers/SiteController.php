@@ -133,6 +133,10 @@ class SiteController extends Controller
         //вычисление текущего пользователя
         $user_current=  User::find()->where(['id'=>$session['__id']])->all();
 
-        return $this->render('records\index');
+
+        return $this->render('records\index',
+                      ['model'=>$user_current,
+                      'path'=>dirname(Yii::$app->basePath)]);
+
     }
 }
