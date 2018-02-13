@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'Insta';
+$this->title = 'InstaWal';
 ?>
 <div class="site-index">
 
