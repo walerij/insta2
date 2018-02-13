@@ -46,4 +46,10 @@ class UserRecord extends \yii\db\ActiveRecord
             'acess_token' => 'Acess Token',
         ];
     }
+
+    public function getRecords()
+    {
+        return $this->hasMany(Records::className(),['user_id'=>'id']);
+    }
+
 }
