@@ -11,6 +11,6 @@ $form = ActiveForm::begin([
 
 <?= $form->field($model, 'file')->fileInput(); ?>
 
-    <button>Submit</button>
+    <button>Добавить</button>
 
 <?php ActiveForm::end(); ?>

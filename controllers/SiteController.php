@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\User;
 use app\models\ContactForm;
 
 class SiteController extends Controller
@@ -122,5 +123,16 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+
+    public function actionAllrecord() //вывод всех записей текущего пользователя
+    {
+        $session = Yii::$app->session; //получение текущей сессии
+
+        //вычисление текущего пользователя
+        $user_current=  User::find()->where(['id'=>$session['__id']])->all();
+
+        return $this->render('records\index');
     }
 }
