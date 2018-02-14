@@ -19,6 +19,10 @@ class CommentsController extends Controller {
     {
         return $this->render('index');
     }
+    public function actionViewcomments()
+    {
+        return $this->render('index');
+    }
     
     
 }
