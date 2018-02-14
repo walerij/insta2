@@ -133,6 +133,12 @@ class SiteController extends Controller {
 
         return $user_current;
     }
+    
+    
+    /*
+
+     * текущий пользователь и подписки
+     *      */
    private function getUserPage() {
         $session = Yii::$app->session; //получение текущей сессии
         //вычисление текущего пользователя
@@ -146,13 +152,9 @@ class SiteController extends Controller {
      * @return string
      */
     public function actionAllrecord() { //вывод всех записей текущего пользователя
-
-
-        //вычисление текущего пользователя
-        $user_current = $this->getUser();
-
-
-        return $this->render('records\index', ['model' => $user_current,
+    //вычисление текущего пользователя
+        $user_current = $this->getUserPage();
+         return $this->render('records\index', ['model' => $user_current,
                     'path' => dirname(Yii::$app->basePath)]);
     }
 
