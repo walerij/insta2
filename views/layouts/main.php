@@ -42,6 +42,8 @@ AppAsset::register($this);
 
             ['label' => 'Записи', 'url' => ['/site/allrecord'],
                 'visible' => !Yii::$app->user->isGuest],
+              ['label' => 'Добавление записи', 'url' => ['/site/addrecord'],
+                'visible' => !Yii::$app->user->isGuest],
 
             /* ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],*/

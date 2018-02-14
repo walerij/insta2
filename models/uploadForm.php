@@ -9,7 +9,7 @@ use yii\base\Model;
 class uploadForm extends Model {
 
     public $file;
-    public $path;
+    public $info;
 
     public function rules() {
         return [
@@ -17,7 +17,9 @@ class uploadForm extends Model {
 
             [['file'], 'file', 'extensions' => 'png, jpg',
                 'skipOnEmpty' => false              
-                ]
+                ],
+            ['info','string'],
+            ['info','required'],
             ];
             
         

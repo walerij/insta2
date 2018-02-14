@@ -9,7 +9,11 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\User;
+use app\models\Records;
 use app\models\ContactForm;
+use yii\web\UploadedFile;
+
+use app\models\UploadForm;
 
 class SiteController extends Controller
 {
@@ -158,13 +162,23 @@ class SiteController extends Controller
         
       public function actionAddrecord() {
         $model = new UploadForm();
+        $RecordsRec= new Records();
         if (Yii::$app->request->post()) {
             $model->file = UploadedFile::getInstance($model, 'file');
+            //$model->info = UploadedFile::getInstance($model, 'info');
             if ($model->validate()) {
                 $path = Yii::$app->params['pathUploads'] . 'img/records/';
+              //  $model->info = UploadedFile::getInstance($model, 'info');
                 //$model->file->saveAs($path . $model->file);
-                $model->file->saveAs($path .'pic_1_1_'.time().'.'. $model->file->getExtension());
+                $picture='pic_1_1_'.time().'.'. $model->file->getExtension();
+                $model->file->saveAs($path .$picture);
               //  $model->path= $path .time().'.'. $model->file->getExtension();
+                $RecordsRec->link=$picture; //запомнили картинку в модель Записи
+                $RecordsRec->record_info=$model->info; //азпишем информацию
+                $RecordsRec->record_date=date(); //запишем дату
+                $RecordsRec->user_id =$session['__id']; //запишем id пользователя
+                $RecordsRec->save(); //сохраним в БД
+                return $this->redirect('/site/allrecord'); //переадресуемся на вывод всех записей
             }
         }
         return $this->render('records\addrecord', ['model' => $model]);
