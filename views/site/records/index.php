@@ -1,19 +1,28 @@
-<h3>Записи текущего пользователя</h3>
+
 
 <?php
 foreach ($model as $user) {
-    echo $user->username;
+   
     foreach ($user->records as $record) {
 
         //http://via.placeholder.com/350x150
         ?>
         <div class="thumbnail">
             <img src='<?= '/img/records//' . $record->link; ?>' style="height: 300px">
+            <div class="thumbnail panel-info">
+                <strong><?= $user->username; ?>
+                    <span class="bg-info"><?= $record->record_date; ?></span>
+                
+                </strong>
+                
+                <p><?= $record->record_info; ?></p>
+                <div class="right">
+                    <a class="bg-info" href="#">Комментарии:0 </a>
+                </div>
+            </div>  
+
         </div>
-        <div class="thumbnail">
-            <strong><?= $user->username; ?></strong>
-            <p><?= $record->record_info; ?></p>
-        </div>
+
 <?
 }
 

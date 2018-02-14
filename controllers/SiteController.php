@@ -12,16 +12,14 @@ use app\models\User;
 use app\models\Records;
 use app\models\ContactForm;
 use yii\web\UploadedFile;
-
 use app\models\UploadForm;
 
-class SiteController extends Controller
-{
+class SiteController extends Controller {
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -46,8 +44,7 @@ class SiteController extends Controller
     /**
      * @inheritdoc
      */
-    public function actions()
-    {
+    public function actions() {
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
@@ -64,8 +61,7 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         return $this->render('index');
     }
 
@@ -74,8 +70,7 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionLogin()
-    {
+    public function actionLogin() {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -85,7 +80,7 @@ class SiteController extends Controller
             return $this->goBack();
         }
         return $this->render('login', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -94,8 +89,7 @@ class SiteController extends Controller
      *
      * @return Response
      */
-    public function actionLogout()
-    {
+    public function actionLogout() {
         Yii::$app->user->logout();
 
         return $this->goHome();
@@ -106,8 +100,7 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionContact()
-    {
+    public function actionContact() {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
@@ -115,7 +108,7 @@ class SiteController extends Controller
             return $this->refresh();
         }
         return $this->render('contact', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -124,78 +117,75 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionAbout()
-    {
+    public function actionAbout() {
         return $this->render('about');
     }
 
-    
-     /**
+    /**
      * Здесь и далее - работа с записями.
      *
      * @return 
      */
-     private function getUser()
-     {
-           $session = Yii::$app->session; //получение текущей сессии
-
+    private function getUser() {
+        $session = Yii::$app->session; //получение текущей сессии
         //вычисление текущего пользователя
-         $user_current=  User::find()->where(['id'=>$session['__id']])->all();
-       
-        return $user_current;
-     }
+        $user_current = User::find()->where(['id' => $session['__id']])->all();
 
-     /**
+        return $user_current;
+    }
+   private function getUserPage() {
+        $session = Yii::$app->session; //получение текущей сессии
+        //вычисление текущего пользователя
+        $user_current = User::find()->where(['id' => $session['__id']])->all();
+
+        return $user_current;
+    }
+    /**
      * Вывод всех записей текушего пользователя
      *
      * @return string
      */
-    public function actionAllrecord() //вывод всех записей текущего пользователя
-    {
-        
+    public function actionAllrecord() { //вывод всех записей текущего пользователя
+
 
         //вычисление текущего пользователя
-        $user_current= $this->getUser();
+        $user_current = $this->getUser();
 
 
-        return $this->render('records\index',
-                      ['model'=>$user_current,
-                      'path'=>dirname(Yii::$app->basePath)]);
-
+        return $this->render('records\index', ['model' => $user_current,
+                    'path' => dirname(Yii::$app->basePath)]);
     }
-    
-      /**Добавление новой записи
+
+    /*     * Добавление новой записи
      *
      * @return string
      */
-        
-      public function actionAddrecord() {
+
+    public function actionAddrecord() {
         $model = new UploadForm();
-        $RecordsRec= new Records();
-         $user_current= $this->getUser();
+        $RecordsRec = new Records();
+        $user_current = $this->getUser();
         if (Yii::$app->request->post()) {
             $model->load(Yii::$app->request->post());
             $model->file = UploadedFile::getInstance($model, 'file');
-            //$model->info = UploadedFile::getInstance($model, 'info');
+           
             if ($model->validate()) {
                 $path = Yii::$app->params['pathUploads'] . 'img/records/';
-              //  $model->info = UploadedFile::getInstance($model, 'info');
-                //$model->file->saveAs($path . $model->file);
-                $picture='pic_1_1_'.time().'.'. $model->file->getExtension();
-                $model->file->saveAs($path .$picture);
-              //  $model->path= $path .time().'.'. $model->file->getExtension();
-              foreach ($user_current as $usercurrent) 
-                  $RecordsRec->user_id = $usercurrent->id; //запишем id пользователя
-                $RecordsRec->link=$picture; //запомнили картинку в модель Записи
-                $RecordsRec->record_info=$model->info; //азпишем информацию
-                $RecordsRec->record_date= date('Y-m-d H:i:s'); //запишем дату
                 
+                $picture = 'pic_1_1_' . time() . '.' . $model->file->getExtension();
+                $model->file->saveAs($path . $picture);
+                
+                foreach ($user_current as $usercurrent)
+                    $RecordsRec->user_id = $usercurrent->id; //запишем id пользователя
+                $RecordsRec->link = $picture; //запомнили картинку в модель Записи
+                $RecordsRec->record_info = $model->info; //азпишем информацию
+                $RecordsRec->record_date = date('Y-m-d H:i:s'); //запишем дату
+
                 $RecordsRec->save(); //сохраним в БД
                 return $this->redirect('/site/allrecord'); //переадресуемся на вывод всех записей
             }
         }
         return $this->render('records\addrecord', ['model' => $model]);
     }
-    
-    
+
 }
