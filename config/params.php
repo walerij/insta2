@@ -2,5 +2,5 @@
 
 return [
     'adminEmail' => 'admin@example.com',
-    'pathUploads' => realpath(dirname(__FILE__)).'\..\img\\',
+    //'pathUploads' => realpath(dirname(__FILE__)).'\..\img\\',
 ];

@@ -41,7 +41,7 @@ class UploadController extends Controller {
         if (Yii::$app->request->post()) {
             $model->file = UploadedFile::getInstance($model, 'file');
             if ($model->validate()) {
-                $path = Yii::$app->params['pathUploads'] . 'records/';
+                $path = Yii::$app->params['pathUploads'] . 'img/records/';
                 //$model->file->saveAs($path . $model->file);
                 $model->file->saveAs($path .'pic_1_1_'.time().'.'. $model->file->getExtension());
               //  $model->path= $path .time().'.'. $model->file->getExtension();

@@ -125,7 +125,18 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-
+    
+     /**
+     * Здесь и далее - работа с записями.
+     *
+     * @return 
+     */
+    
+    /**
+     * Вывод всех записей текушего пользователя
+     *
+     * @return string
+     */
     public function actionAllrecord() //вывод всех записей текущего пользователя
     {
         $session = Yii::$app->session; //получение текущей сессии
@@ -139,4 +150,25 @@ class SiteController extends Controller
                       'path'=>dirname(Yii::$app->basePath)]);
 
     }
+    
+      /**Добавление новой записи
+     *
+     * @return string
+     */
+        
+      public function actionAddrecord() {
+        $model = new UploadForm();
+        if (Yii::$app->request->post()) {
+            $model->file = UploadedFile::getInstance($model, 'file');
+            if ($model->validate()) {
+                $path = Yii::$app->params['pathUploads'] . 'img/records/';
+                //$model->file->saveAs($path . $model->file);
+                $model->file->saveAs($path .'pic_1_1_'.time().'.'. $model->file->getExtension());
+              //  $model->path= $path .time().'.'. $model->file->getExtension();
+            }
+        }
+        return $this->render('records\addrecord', ['model' => $model]);
+    }
+    
+    
 }
