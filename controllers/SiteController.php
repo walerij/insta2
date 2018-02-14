@@ -135,18 +135,27 @@ class SiteController extends Controller
      *
      * @return 
      */
-    
-    /**
+     private function getUser()
+     {
+           $session = Yii::$app->session; //получение текущей сессии
+
+        //вычисление текущего пользователя
+         $user_current=  User::find()->where(['id'=>$session['__id']])->all();
+       
+        return $user_current;
+     }
+
+     /**
      * Вывод всех записей текушего пользователя
      *
      * @return string
      */
     public function actionAllrecord() //вывод всех записей текущего пользователя
     {
-        $session = Yii::$app->session; //получение текущей сессии
+        
 
         //вычисление текущего пользователя
-        $user_current=  User::find()->where(['id'=>$session['__id']])->all();
+        $user_current= $this->getUser();
 
 
         return $this->render('records\index',
@@ -163,7 +172,9 @@ class SiteController extends Controller
       public function actionAddrecord() {
         $model = new UploadForm();
         $RecordsRec= new Records();
+         $user_current= $this->getUser();
         if (Yii::$app->request->post()) {
+            $model->load(Yii::$app->request->post());
             $model->file = UploadedFile::getInstance($model, 'file');
             //$model->info = UploadedFile::getInstance($model, 'info');
             if ($model->validate()) {
@@ -173,10 +184,12 @@ class SiteController extends Controller
                 $picture='pic_1_1_'.time().'.'. $model->file->getExtension();
                 $model->file->saveAs($path .$picture);
               //  $model->path= $path .time().'.'. $model->file->getExtension();
+              foreach ($user_current as $usercurrent) 
+                  $RecordsRec->user_id = $usercurrent->id; //запишем id пользователя
                 $RecordsRec->link=$picture; //запомнили картинку в модель Записи
                 $RecordsRec->record_info=$model->info; //азпишем информацию
-                $RecordsRec->record_date=date(); //запишем дату
-                $RecordsRec->user_id =$session['__id']; //запишем id пользователя
+                $RecordsRec->record_date= date('Y-m-d H:i:s'); //запишем дату
+                
                 $RecordsRec->save(); //сохраним в БД
                 return $this->redirect('/site/allrecord'); //переадресуемся на вывод всех записей
             }
