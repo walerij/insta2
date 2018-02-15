@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\data\Pagination;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -154,8 +155,14 @@ class SiteController extends Controller {
     public function actionAllrecord() { //вывод всех записей текущего пользователя
     //вычисление текущего пользователя
         $user_current = $this->getUserPage();
+
+        $pagination= new Pagination([
+            'defaultPageSize'=>2,
+            'totalCount'=>$user_current->records->count(),
+        ]);
          return $this->render('records\index', ['model' => $user_current,
-                    'path' => dirname(Yii::$app->basePath)]);
+                    'path' => dirname(Yii::$app->basePath),
+                  'pagination'=>$pagination]);
     }
 
     /*     * Добавление новой записи
@@ -167,6 +174,8 @@ class SiteController extends Controller {
         $model = new UploadForm();
         $RecordsRec = new Records();
         $user_current = $this->getUser();
+
+
         if (Yii::$app->request->post()) {
             $model->load(Yii::$app->request->post());
             $model->file = UploadedFile::getInstance($model, 'file');
