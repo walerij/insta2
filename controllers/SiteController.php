@@ -143,9 +143,12 @@ class SiteController extends Controller {
    private function getUserPage() {
         $session = Yii::$app->session; //получение текущей сессии
         //вычисление текущего пользователя
-        $user_current = User::find()->where(['id' => $session['__id']])->all();
+        $record_current = Records::find()
+                           ->where(['user_id' => $session['__id']])
+                           ->orderBy('record_date')
+                          ;
 
-        return $user_current;
+        return $record_current;
     }
     /**
      * Вывод всех записей текушего пользователя
@@ -154,17 +157,17 @@ class SiteController extends Controller {
      */
     public function actionAllrecord() { //вывод всех записей текущего пользователя
     //вычисление текущего пользователя
-        $user_current = $this->getUserPage();
+        $records_current = $this->getUserPage();
 
         $pagination= new Pagination([
             'defaultPageSize'=>2,
-            'totalCount'=>$user_current->records->count(),
+            'totalCount'=>$records_current->count(),
         ]);
           $records_current=$records_current
                 ->offset($pagination->offset)
                 ->limit($pagination->limit)
                 ->all();
-         return $this->render('records\index', ['model' => $user_current,
+         return $this->render('records\index', ['model' => $records_current,
                     'path' => dirname(Yii::$app->basePath),
                   'pagination'=>$pagination]);
     }
