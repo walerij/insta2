@@ -1,9 +1,12 @@
 
 
 <?php
-foreach ($model as $user) {
+
+    use yii\widgets\LinkPager;
+       
+   echo '<hr>'.LinkPager::widget(['pagination'=>$pagination]).'<hr>';
    
-    foreach ($user->records as $record) {
+    foreach ($model as $record) {
 
         //http://via.placeholder.com/350x150
         ?>
@@ -23,7 +26,7 @@ foreach ($model as $user) {
 
         </div>
 
-<?
-}
+<?}?>
+<?=LinkPager::widget(['pagination'=>$pagination])?>
 
-}
+

@@ -160,6 +160,10 @@ class SiteController extends Controller {
             'defaultPageSize'=>2,
             'totalCount'=>$user_current->records->count(),
         ]);
+          $records_current=$records_current
+                ->offset($pagination->offset)
+                ->limit($pagination->limit)
+                ->all();
          return $this->render('records\index', ['model' => $user_current,
                     'path' => dirname(Yii::$app->basePath),
                   'pagination'=>$pagination]);
